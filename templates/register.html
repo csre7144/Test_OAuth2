@@ -71,7 +71,6 @@
             var data = {};
             formData.forEach((value, key) => {
                 if (key in data) {
-                    // Convert to array if multiple values for a single key
                     data[key] = Array.isArray(data[key]) ? [...data[key], value] : [data[key], value];
                 } else {
                     data[key] = value;
@@ -87,17 +86,28 @@
                 },
                 body: JSON.stringify(data)
             })
-            .then(response => response.json())
-            .then(data => {
+            .then(response => {
+                console.log('Response:', response);
                 if (response.ok) {
-                    window.location.href = '/'; // Redirect on success
+                    return response.json(); // Parse JSON if response is OK
                 } else {
-                    console.error('Error:', data);
+                    return response.json().then(data => {
+                        console.error('Response error:', data);
+                        throw new Error('Network response was not ok.');
+                    }); // Handle non-OK responses
                 }
             })
-            .catch(error => console.error('Fetch error:', error));
+            .then(data => {
+                console.log('Success data:', data);
+                window.location.href = '{% url "signin_list" %}'; // Redirect on success
+            })
+            .catch(error => {
+                console.error('Fetch error:', error);
+            });
         });
     </script>
+    
+    
     
 </body>
 </html>

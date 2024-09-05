@@ -34,6 +34,8 @@
 </html> -->
 
 {% load static %}
+{% load socialaccount %}
+{% providers_media_js %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -56,47 +58,12 @@
                 <button type="submit"> Login </button>
             </form>
             <!-- <button type="submit"> Google with sign in </button> -->
-            <a href="#"> <button type="submit"> Google with sign in </button> </a>
+            <a href="{% provider_login_url "google" method="oauth2" %}"> <button type="submit"> Google with sign in </button> </a>
 
             <a href="{% url 'register_list' %}"> <p> Don't have an account? Register </p></a>
         </div>
     </div>
-    <script>
-        document.getElementById('registrationForm').addEventListener('submit', function(event) {
-            event.preventDefault();
     
-            // Gather form data
-            var formData = new FormData(event.target);
-            var data = {};
-            formData.forEach((value, key) => {
-                if (key in data) {
-                    // Convert to array if multiple values for a single key
-                    data[key] = Array.isArray(data[key]) ? [...data[key], value] : [data[key], value];
-                } else {
-                    data[key] = value;
-                }
-            });
-    
-            // Send JSON data
-            fetch(window.location.href, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]').value
-                },
-                body: JSON.stringify(data)
-            })
-            .then(response => response.json())
-            .then(data => {
-                if (response.ok) {
-                    window.location.href = '/'; // Redirect on success
-                } else {
-                    console.error('Error:', data);
-                }
-            })
-            .catch(error => console.error('Fetch error:', error));
-        });
-    </script>
     
 </body>
 </html>

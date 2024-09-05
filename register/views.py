@@ -20,18 +20,34 @@ from .serializers import UserSerializer
 from rest_framework.response import Response
 from django.contrib.auth.models import User
 from django.contrib.auth import authenticate, login
+from django.http import JsonResponse
+
 
 def home(request):
     return render(request, 'index.html')
 
+# This is wrong something!
+
+# def register_list(request):
+#     if request.method == 'POST':
+#         data = JSONParser().parse(request)
+#         serializer = UserSerializer(data=data)
+#         if serializer.is_valid():
+#             serializer.save()
+#             # return redirect('signin_list')  # Redirect to avoid resubmission on refresh
+#         return Response(serializer.errors, status=400)
+#     else:
+#         serializer = UserSerializer()
+    
+#     return render(request, 'register.html', {'serializer': serializer})
 def register_list(request):
     if request.method == 'POST':
         data = JSONParser().parse(request)
         serializer = UserSerializer(data=data)
         if serializer.is_valid():
             serializer.save()
-            return redirect('home')  # Redirect to avoid resubmission on refresh
-        return Response(serializer.errors, status=400)
+            return JsonResponse({'message': 'Registration successful'}, status=200)  # Return JSON response on success
+        return JsonResponse({'errors': serializer.errors}, status=400)  # Return JSON response on error
     else:
         serializer = UserSerializer()
     
