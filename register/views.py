@@ -48,6 +48,3 @@ def signin_list(request):
         else:
             return redirect('signin_list')
     return render(request, 'signin.html')
-
-def LoginView(request):
-    return render(request, 'account_inactive.html')
